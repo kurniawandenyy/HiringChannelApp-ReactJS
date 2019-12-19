@@ -1,11 +1,10 @@
 import { Table, Container, Card, Row, Col, Button, ButtonToolbar } from 'react-bootstrap'
 import { FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import { faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
 import Header from '../Header'
 import Axios from 'axios'
 import { Link } from 'react-router-dom'
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
 
 export default class Profile extends Component {
     constructor(){
@@ -48,12 +47,11 @@ export default class Profile extends Component {
     }
     deleteData = (url)=>{
         console.log(url)
-        Axios.delete(url, { headers: { Authorization:'Bearer '+localStorage.getItem('token'), email: localStorage.getItem('email') }})
+        Axios.delete(url)
         .then(res=>{
             this.setState({
-                isDeleted:true
+                id:true
             });
-            localStorage.clear()
         })
     }
     render() {
@@ -110,11 +108,9 @@ export default class Profile extends Component {
                 </tbody>
                 </Table>
                 <ButtonToolbar>
-                <Link to={`/edit/${this.state.id}`}><Button variant="outline-warning"><FontAwesomeIcon icon={faPencilAlt}/> Edit</Button></Link>&nbsp;
-                <Button variant="outline-danger" onClick={() => this.deleteData(`http://34.229.234.20:8000/api/v1/engineers/${this.state.id}`) } ><FontAwesomeIcon icon={faTrash} /> Delete</Button>
+                <Link to={`/`}><Button variant="outline-primary"><FontAwesomeIcon icon={faArrowAltCircleLeft}/> Back</Button></Link>&nbsp;
                 </ButtonToolbar></Col>
                 </Row>
-                { (this.state.isDeleted) ? <Redirect to='/' /> : null }
             </Container>
         </>
         )

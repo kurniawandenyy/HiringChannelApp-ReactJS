@@ -1,16 +1,17 @@
 import { Form, Button, Card, Row, Col, Container, Alert, Nav } from 'react-bootstrap'
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Redirect } from 'react-router-dom'
+import { Redirect, withRouter } from 'react-router-dom'
 
-export default class Login extends Component {
+class Login extends Component {
     constructor(){
         super()
         this.state={
             message: '',
             email: '',
             role: '',
-            token: ''
+            token: '',
+            id: ''
         }
     }
     Login = e =>{
@@ -25,9 +26,14 @@ export default class Login extends Component {
                 email: res.data.data.email,
                 message: res.data.message,
                 role: res.data.data.role,
-                token: res.data.token
+                token: res.data.token,
+                id: res.data.data.id
             })
-            axios.defaults.headers.common["Authorization"] = this.state.token;
+            localStorage.setItem('token', this.state.token)
+            localStorage.setItem('id', this.state.id)
+            localStorage.setItem('email', this.state.email);
+            console.log(res.data)
+            this.props.history.push('/')
         })
         .catch(err=>{
             this.setState({
@@ -36,6 +42,7 @@ export default class Login extends Component {
         })
     }
     render() {
+        console.log(this.state.id)
         return (
             <Container className='justify-content-center mt-5' style={{ paddingBottom:'20px'}}>
             <Row className="justify-content-center">
@@ -70,15 +77,13 @@ export default class Login extends Component {
                         <Col sm="8">
                         <Nav.Link href="/register">Create an account</Nav.Link></Col>
                     </Form.Group>
-                    <Button variant="primary" type="submit" >Signin</Button>
+                    <Button variant="primary" type="submit">Signin</Button>
                 </Form>
                 </Card.Body></Card>
                 <small>&copy;Deny Kurniawan</small>
-                </Col></Row>
-                {
-                    (!this.state.token) ? null : <Redirect push to="/" />
-                }
+                </Col></Row>{ (localStorage.getItem('token')) ? <Redirect to='/' /> : null }
         </Container>
         )
     }
 }
+export default withRouter(Login)

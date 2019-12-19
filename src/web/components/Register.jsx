@@ -36,10 +36,6 @@ export default class Register extends Component {
     }
 
     render() {
-        console.log(this.state.email)
-        console.log(this.state.name)
-        console.log(this.state.password)
-        console.log(this.state.role)
         return (
             <Container className='justify-content-center mt-5' style={{ paddingBottom:'20px'}}>
             <Row className="justify-content-center">

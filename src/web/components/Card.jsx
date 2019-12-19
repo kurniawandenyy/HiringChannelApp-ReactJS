@@ -3,6 +3,7 @@ import axios from 'axios'
 import Header from '../Header'
 import CardList from './CardList'
 import { Button,Row, ButtonToolbar, DropdownButton, Dropdown, Container } from 'react-bootstrap'
+import { Redirect } from 'react-router-dom'
 
 export default class Card extends Component {
     constructor(){
@@ -14,55 +15,18 @@ export default class Card extends Component {
             isError: false,
             next: '',
             page: '',
-            token: '',
             previous: '',
-            user: 'Budi Setiawan'
+            user: ''
         }
     }
 
     componentDidMount(){
         // do something after component mounted
         this.getAll('http://34.229.234.20:8000/api/v1/engineers?page=1')
-        fetch('http://34.229.234.20:8000/api/v1/engineers?page=1').then(response=>{
-          console.log(response.headers)
-        })
+        this.getName('http://34.229.234.20:8000/api/v1/engineers/' + localStorage.getItem('id'))
       }
 
-      getToken = (headers) =>{
-        if (headers && headers.authorization) {
-          var parted = headers.authorization.split(" ");
-            if (parted.length === 2) {
-             this.setState({
-               token: parted[1]
-             }) 
-            } else {
-             return null;
-            }
-          } else {
-           return null;
-          }
-      }
-      // callbackFunction = (data) =>{
-      //   axios.get(`http://34.229.234.20:8000/api/v1/engineers?page=1&name=${data}`)
-      //   .then(res => {
-      //         this.setState({ 
-      //         card: res.data.result.data,
-      //         next: res.data.nextPage,
-      //         previous: res.data.prevPage,
-      //         isLoading: false, isError: false})
-      //   })
-      //   .catch(err => {
-      //     // console.log(err)
-      //     this.setState({ isLoading: false, isError: true })
-      //   })
-      // }
-
-      // isAuthenticate(token)=>{
-
-      // }
       getAll = (url) => {
-        // alert('button clicked!')
-        console.log(url)
         this.setState({ isLoading: true })
         axios.get(url)
           .then(res => {
@@ -75,13 +39,24 @@ export default class Card extends Component {
                 isLoading: false, isError: false})
           })
           .catch(err => {
-            // console.log(err)
             this.setState({ isLoading: false, isError: true })
           })
       }
-
+      getName = (url) => {
+        axios.get(url)
+        .then(res=>{
+          console.log(url)
+          this.setState({
+            user:res.data.result[0].name
+          })
+        })
+        .catch(err=>{
+          this.setState({
+            user:''
+          })
+        })
+      }
       getData = (data) => {
-        // this.getAll(this.state.base_url+`&name=${data}`)
         axios.get(`http://34.229.234.20:8000/api/v1/engineers?page=1&name=${data}`)
         .then(res => {
           this.setState({ 
@@ -92,17 +67,17 @@ export default class Card extends Component {
               isLoading: false, isError: false})
         })
         .catch(err => {
-          // console.log(err)
           this.setState({ isLoading: false, isError: true })
         })
       }
     render(){
-        console.log(this.state.base_url)
+        console.log(this.state.user)
         const { card, isLoading, isError, previous, next, page } = this.state;
-        // <Header parentCallback={callbackFunction} />
+        
         return (
           <>
-          <Header getDataFromSearch={this.getData} searchBar='true' user={this.state.user}/>
+          { (!localStorage.getItem('token')) ? <Redirect push to="/login" /> :
+          <Header getDataFromSearch={this.getData} searchBar='true' user={this.state.user}/> }
           <Container className='justify-content-center mt-3' style={{ paddingBottom:'20px'}}>
           <Row>
             <ButtonToolbar>
