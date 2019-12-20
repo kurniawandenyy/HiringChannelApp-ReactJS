@@ -88,7 +88,7 @@ export default class Register extends Component {
                     <Button variant="primary" type="submit" >Sign Up</Button>
                 </Form>
                 </Card.Body></Card>
-                <small>&copy;Deny Kurniawan</small>
+                <small>&copy;DenyKurniawan</small>
                 </Col></Row>
                 {/* {
                     (this.state.message==='Register success') ? <Redirect push to="/login" /> : null

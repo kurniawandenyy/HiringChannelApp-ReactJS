@@ -31,6 +31,9 @@ export default class Profile extends Component {
     getData = (url) =>{
         Axios.get(url)
         .then(res=>{
+            let date = new Date(res.data.result[0].date_of_birth)
+            let dob = (date.getUTCMonth()+1) > 9 ?  date.getUTCFullYear()+'-'+(date.getUTCMonth()+1)+'-'+date.getUTCDate() :
+            date.getUTCFullYear()+'-0'+(date.getUTCMonth()+1)+'-0'+date.getUTCDate()
             this.setState({
                 name:res.data.result[0].name,
                 id:res.data.result[0].id,
@@ -38,7 +41,7 @@ export default class Profile extends Component {
                 description:res.data.result[0].description,
                 skill:res.data.result[0].skill,
                 location:res.data.result[0].location,
-                dateOfBirth:res.data.result[0].date_of_birth,
+                dateOfBirth: dob,
                 expectedSalary:res.data.result[0].expected_salary,
                 email:res.data.result[0].email,
                 phone:res.data.result[0].phone,

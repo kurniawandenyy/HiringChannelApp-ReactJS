@@ -26,13 +26,16 @@ export default class EditProfile extends Component {
     getData = (url) =>{
         Axios.get(url)
         .then(res=>{
+            let date = new Date(res.data.result[0].date_of_birth)
+            let dob = (date.getUTCMonth()+1) > 9 ?  date.getUTCFullYear()+'-'+(date.getUTCMonth()+1)+'-'+date.getUTCDate() :
+            date.getUTCFullYear()+'-0'+(date.getUTCMonth()+1)+'-0'+date.getUTCDate()
             this.setState({
                 name:res.data.result[0].name,
                 photo:res.data.result[0].photo,
                 description:res.data.result[0].description,
                 skill:res.data.result[0].skill,
                 location:res.data.result[0].location,
-                date_of_birth:res.data.result[0].date_of_birth,
+                date_of_birth:dob,
                 expected_salary:res.data.result[0].expected_salary,
                 email:res.data.result[0].email,
                 phone:res.data.result[0].phone,

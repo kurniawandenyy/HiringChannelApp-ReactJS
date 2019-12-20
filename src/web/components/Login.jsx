@@ -80,7 +80,7 @@ class Login extends Component {
                     <Button variant="primary" type="submit">Signin</Button>
                 </Form>
                 </Card.Body></Card>
-                <small>&copy;Deny Kurniawan</small>
+                <small>&copy;DenyKurniawan</small>
                 </Col></Row>{ (localStorage.getItem('token')) ? <Redirect to='/' /> : null }
         </Container>
         )

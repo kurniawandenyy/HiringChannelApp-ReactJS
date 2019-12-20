@@ -21,15 +21,20 @@ export default class Profile extends Component {
             email:'',
             phone:'',
             showcase:'',
-            isDeleted: false
+            isDeleted: false,
+            user:''
         }
     }
     componentDidMount(){
         this.getData(`http://34.229.234.20:8000/api/v1/engineers/`+this.props.match.params.id)
+        this.getName('http://34.229.234.20:8000/api/v1/engineers/' + localStorage.getItem('id'))
     }
     getData = (url) =>{
         Axios.get(url)
         .then(res=>{
+            let date = new Date(res.data.result[0].date_of_birth)
+            let dob = (date.getUTCMonth()+1) > 9 ?  date.getUTCFullYear()+'-'+(date.getUTCMonth()+1)+'-'+date.getUTCDate() :
+            date.getUTCFullYear()+'-0'+(date.getUTCMonth()+1)+'-0'+date.getUTCDate()
             this.setState({
                 name:res.data.result[0].name,
                 id:res.data.result[0].id,
@@ -37,7 +42,7 @@ export default class Profile extends Component {
                 description:res.data.result[0].description,
                 skill:res.data.result[0].skill,
                 location:res.data.result[0].location,
-                dateOfBirth:res.data.result[0].date_of_birth,
+                dateOfBirth:dob,
                 expectedSalary:res.data.result[0].expected_salary,
                 email:res.data.result[0].email,
                 phone:res.data.result[0].phone,
@@ -54,11 +59,25 @@ export default class Profile extends Component {
             });
         })
     }
+    getName = (url) => {
+        Axios.get(url)
+        .then(res=>{
+          console.log(url)
+          this.setState({
+            user:res.data.result[0].name
+          })
+        })
+        .catch(err=>{
+          this.setState({
+            user:''
+          })
+        })
+      }
     render() {
-        console.log(this.state.id)
+        // console.log(this.state.id)
         return (
             <>
-            <Header user={this.state.name}/>
+            <Header user={this.state.user}/>
             <Container className='justify-content-center mt-3' style={{ paddingBottom:'20px'}}>
                 <Row className='justify-content-center'>
                     <Col md='3'>
