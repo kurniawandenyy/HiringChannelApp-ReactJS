@@ -8,7 +8,7 @@ export default class EditProfile extends Component {
         super()
         this.state={
             name:'',
-            photo:'',
+            photo: null,
             description:'',
             skill:'',
             location:'',
@@ -17,11 +17,13 @@ export default class EditProfile extends Component {
             email:'',
             phone:'',
             showcase:'',
-            message: ''
+            message: '',
+            user:''
         }
     }
     componentDidMount(){
         this.getData(`http://34.229.234.20:8000/api/v1/engineers/`+this.props.match.params.id)
+        this.getName('http://34.229.234.20:8000/api/v1/engineers/' + localStorage.getItem('id'))
     }
     getData = (url) =>{
         Axios.get(url)
@@ -46,18 +48,20 @@ export default class EditProfile extends Component {
 
     Update = e =>{
         e.preventDefault();
-        const data = {
-            name: this.state.name,
-            date_of_birth: this.state.date_of_birth,
-            location: this.state.location,
-            phone: this.state.phone,
-            description: this.state.description,
-            email: this.state.email,
-            expected_salary: this.state.expected_salary,
-            skill: this.state.skill,
-            showcase: this.state.showcase
-        }
-        Axios.put('http://34.229.234.20:8000/api/v1/engineers/'+localStorage.getItem('id'), data, { headers: { Authorization:'Bearer '+localStorage.getItem('token'), email: localStorage.getItem('email') }})
+        let formData = new FormData()
+        formData.append('name', this.state.name)
+        formData.append('date_of_birth', this.state.date_of_birth)
+        formData.append('location', this.state.location)
+        formData.append('phone', this.state.phone)
+        formData.append('description', this.state.description)
+        formData.append('email', this.state.email)
+        formData.append('expected_salary', this.state.expected_salary)
+        formData.append('skill', this.state.skill)
+        formData.append('showcase', this.state.showcase)
+        formData.append('photo', this.state.photo)
+
+        console.log('formData: '+formData)
+        Axios.put(`http://34.229.234.20:8000/api/v1/engineers/${localStorage.getItem('id')}`, formData, { headers: { 'Content-type':'multipart/form-data', Authorization:'Bearer '+localStorage.getItem('token'), email: localStorage.getItem('email') }})
         .then( res=>{
             this.setState({
                 message: 'Update Success!'
@@ -65,21 +69,39 @@ export default class EditProfile extends Component {
             // this.props.history.push(`/profile/${localStorage.getItem('id')}`)
         })
         .catch(err=>{
+            console.log(err)
             this.setState({
                 message: 'Update Failed!'
             })
         })
     }
-
+    getName = (url) => {
+        Axios.get(url)
+        .then(res=>{
+          this.setState({
+            user:res.data.result[0].name
+          })
+        })
+        .catch(err=>{
+          this.setState({
+            user:''
+          })
+        })
+      }
+      onFileChange = e =>{
+          this.setState({
+              photo: e.target.files[0]
+          })
+      }
     render() {
+        console.log('photo: '+this.state.photo)
         return (
             <>
-            <Header user={this.state.name}/>
+            <Header user={this.state.user}/>
             <Container className='justify-content-center mt-3' style={{ paddingBottom:'20px'}}>
             <Row className='justify-content-center'>
-            
             <Col md='3'>
-            <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '14rem', height:'20rem', backgroundImage: 'url(/img/elon.jpg)', backgroundSize: 'cover' }}>
+            <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '14rem', height:'20rem', backgroundImage: `url(http://34.229.234.20:8000/uploads/engineers/${this.state.photo})`, backgroundSize: 'cover' }}>
             <Card.Body style={{ height: '200px'}}>
             </Card.Body>
             </Card></Col>
@@ -99,9 +121,13 @@ export default class EditProfile extends Component {
                     <Form.Label>Name</Form.Label>
                     <Form.Control onChange={ (e) => this.setState({ name: e.target.value })} name="name" type="text" value={this.state.name} placeholder="Enter name" />
                 </Form.Group>
+                <Form.Group>
+                    <Form.Label>Photo</Form.Label>
+                    <Form.Control onChange={ this.onFileChange } name="photo" type="file" />
+                </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Date Of Birth</Form.Label>
-                    <Form.Control onChange={ (e) => this.setState({ date_of_birth: e.target.value })} name="date_of_birth" type="text" value={this.state.date_of_birth} placeholder="Enter Date Of Birth" />
+                    <Form.Control onChange={ (e) => this.setState({ date_of_birth: e.target.value })} name="date_of_birth" type="date" value={this.state.date_of_birth} placeholder="Enter Date Of Birth" />
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Location</Form.Label>

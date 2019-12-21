@@ -9,7 +9,7 @@ function CardList(props) {
         <>
             <Row className='justify-content-center mt-4'>
             {props.list.map(item => (
-            <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '15rem', height:'20rem', backgroundImage: 'url(img/elon.jpg)', backgroundSize: 'cover' }}>
+            <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '15rem', height:'20rem', backgroundImage: `url(http://34.229.234.20:8000/uploads/engineers/${item.photo})`, backgroundSize: 'cover' }}>
                 <Card.Body style={{ height: '200px'}}>
                 </Card.Body>
                 <Card.Footer className="text-white bg-dark" style={{ borderBottomLeftRadius: '15%', borderBottomRightRadius: '15%', opacity: '0.8'}}>

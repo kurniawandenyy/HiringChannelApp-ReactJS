@@ -45,7 +45,6 @@ export default class Card extends Component {
       getName = (url) => {
         axios.get(url)
         .then(res=>{
-          console.log(url)
           this.setState({
             user:res.data.result[0].name
           })
@@ -71,9 +70,7 @@ export default class Card extends Component {
         })
       }
     render(){
-        console.log(this.state.user)
         const { card, isLoading, isError, previous, next, page } = this.state;
-        
         return (
           <>
           { (!localStorage.getItem('token')) ? <Redirect push to="/login" /> :

@@ -81,7 +81,7 @@ export default class Profile extends Component {
             <Container className='justify-content-center mt-3' style={{ paddingBottom:'20px'}}>
                 <Row className='justify-content-center'>
                     <Col md='3'>
-                <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '14rem', height:'20rem', backgroundImage: 'url(/img/elon.jpg)', backgroundSize: 'cover' }}>
+                <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '14rem', height:'20rem', backgroundImage: `url(http://34.229.234.20:8000/uploads/engineers/${this.state.photo})`, backgroundSize: 'cover' }}>
                 <Card.Body style={{ height: '200px'}}>
                 </Card.Body>
                 </Card></Col>
