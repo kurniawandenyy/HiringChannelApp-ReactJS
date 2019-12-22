@@ -22,11 +22,12 @@ export default class Card extends Component {
 
     componentDidMount(){
         // do something after component mounted
-        this.getAll('http://34.229.234.20:8000/api/v1/engineers?page=1')
-        this.getName('http://34.229.234.20:8000/api/v1/engineers/' + localStorage.getItem('id'))
+        this.getAll(process.env.REACT_APP_BASE_URL+'api/v1/engineers?page=1')
+        this.getName(process.env.REACT_APP_BASE_URL+'api/v1/engineers/' + localStorage.getItem('id'))
       }
 
       getAll = (url) => {
+        console.log(url)
         this.setState({ isLoading: true })
         axios.get(url)
           .then(res => {
@@ -56,7 +57,7 @@ export default class Card extends Component {
         })
       }
       getData = (data) => {
-        axios.get(`http://34.229.234.20:8000/api/v1/engineers?page=1&name=${data}`)
+        axios.get(process.env.REACT_APP_BASE_URL+`api/v1/engineers?page=1&name=${data}`)
         .then(res => {
           this.setState({ 
               card: res.data.result.data,
@@ -115,7 +116,7 @@ export default class Card extends Component {
           <p>Loading..</p></Row> : 
           isError ? (
             <Row className="justify-content-center">
-              <Button variant="outline-primary" onClick={() => this.getAll('http://34.229.234.20:8000/api/v1/engineers?page=1')}> Try Again</Button>
+              <Button variant="outline-primary" onClick={() => this.getAll(process.env.REACT_APP_BASE_URL+'api/v1/engineers?page=1')}> Try Again</Button>
             </Row>
           ) : 
           

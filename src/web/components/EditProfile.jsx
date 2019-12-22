@@ -22,8 +22,8 @@ export default class EditProfile extends Component {
         }
     }
     componentDidMount(){
-        this.getData(`http://34.229.234.20:8000/api/v1/engineers/`+this.props.match.params.id)
-        this.getName('http://34.229.234.20:8000/api/v1/engineers/' + localStorage.getItem('id'))
+        this.getData(process.env.REACT_APP_BASE_URL+`api/v1/engineers/`+this.props.match.params.id)
+        this.getName(process.env.REACT_APP_BASE_URL+'api/v1/engineers/' + localStorage.getItem('id'))
     }
     getData = (url) =>{
         Axios.get(url)
@@ -60,8 +60,13 @@ export default class EditProfile extends Component {
         formData.append('showcase', this.state.showcase)
         formData.append('photo', this.state.photo)
 
-        console.log('formData: '+formData)
-        Axios.put(`http://34.229.234.20:8000/api/v1/engineers/${localStorage.getItem('id')}`, formData, { headers: { 'Content-type':'multipart/form-data', Authorization:'Bearer '+localStorage.getItem('token'), email: localStorage.getItem('email') }})
+        const config =(
+            { headers: { 'Content-type':'multipart/form-data', 
+            Authorization:'Bearer '+localStorage.getItem('token'), 
+            email: localStorage.getItem('email') }}
+        )
+
+        Axios.put(process.env.REACT_APP_BASE_URL+`api/v1/engineers/${localStorage.getItem('id')}`, formData, config)
         .then( res=>{
             this.setState({
                 message: 'Update Success!'
@@ -101,7 +106,7 @@ export default class EditProfile extends Component {
             <Container className='justify-content-center mt-3' style={{ paddingBottom:'20px'}}>
             <Row className='justify-content-center'>
             <Col md='3'>
-            <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '14rem', height:'20rem', backgroundImage: `url(http://34.229.234.20:8000/uploads/engineers/${this.state.photo})`, backgroundSize: 'cover' }}>
+            <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '14rem', height:'20rem', backgroundImage: `url(`+process.env.REACT_APP_BASE_URL+`uploads/engineers/${this.state.photo})`, backgroundSize: 'cover' }}>
             <Card.Body style={{ height: '200px'}}>
             </Card.Body>
             </Card></Col>

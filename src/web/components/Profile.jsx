@@ -26,7 +26,7 @@ export default class Profile extends Component {
         }
     }
     componentDidMount(){
-        this.getData(`http://34.229.234.20:8000/api/v1/engineers/`+this.props.match.params.id)
+        this.getData(process.env.REACT_APP_BASE_URL+`api/v1/engineers/`+this.props.match.params.id)
     }
     getData = (url) =>{
         Axios.get(url)
@@ -51,7 +51,12 @@ export default class Profile extends Component {
     }
     deleteData = (url)=>{
         console.log(url)
-        Axios.delete(url, { headers: { Authorization:'Bearer '+localStorage.getItem('token'), email: localStorage.getItem('email') }})
+        const config =(
+            { headers: { 
+                Authorization:'Bearer '+localStorage.getItem('token'), 
+                email: localStorage.getItem('email')
+            }})
+        Axios.delete(url, config)
         .then(res=>{
             this.setState({
                 isDeleted:true
@@ -67,7 +72,7 @@ export default class Profile extends Component {
             <Container className='justify-content-center mt-3' style={{ paddingBottom:'20px'}}>
                 <Row className='justify-content-center'>
                     <Col md='3'>
-                <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '14rem', height:'20rem', backgroundImage: `url(http://34.229.234.20:8000/uploads/engineers/${this.state.photo})`, backgroundSize: 'cover' }}>
+                <Card style={{ marginBottom:'15px', marginRight: '20px', borderRadius:'12%', width: '14rem', height:'20rem', backgroundImage: `url(`+process.env.REACT_APP_BASE_URL+`uploads/engineers/${this.state.photo})`, backgroundSize: 'cover' }}>
                 <Card.Body style={{ height: '200px'}}>
                 </Card.Body>
                 </Card></Col>
@@ -84,15 +89,15 @@ export default class Profile extends Component {
                     </tr>
                     <tr>
                     <td>Location</td>
-                    <td>{this.state.location}</td>
+                    <td>{(!this.state.location===null)? this.state.location : ''}</td>
                     </tr>
                     <tr>
                     <td>Phone</td>
-                    <td>{this.state.phone}</td>
+                    <td>{(!this.state.phone===null)? this.state.phone : ''}</td>
                     </tr>
                     <tr>
                     <td>Description</td>
-                    <td>{this.state.description}</td>
+                    <td>{(!this.state.description===null)? this.state.description : ''}</td>
                     </tr>
                     <tr>
                     <td>Email</td>
@@ -100,21 +105,21 @@ export default class Profile extends Component {
                     </tr>
                     <tr>
                     <td>Expected Salary</td>
-                    <td>{this.state.expectedSalary}</td>
+                    <td>{(!this.state.expectedSalary===0)? this.state.expectedSalary : ''}</td>
                     </tr>
                     <tr>
                     <td>Skill</td>
-                    <td>{this.state.skill}</td>
+                    <td>{(!this.state.skill===null)? this.state.skill : ''}</td>
                     </tr>
                     <tr>
                     <td>Showcase</td>
-                    <td>{this.state.showcase}</td>
+                    <td>{(!this.state.showcase===null)? this.state.showcase : ''}</td>
                     </tr>
                 </tbody>
                 </Table>
                 <ButtonToolbar>
                 <Link to={`/edit/${this.state.id}`}><Button variant="outline-warning"><FontAwesomeIcon icon={faPencilAlt}/> Edit</Button></Link>&nbsp;
-                <Button variant="outline-danger" onClick={() => this.deleteData(`http://34.229.234.20:8000/api/v1/engineers/${this.state.id}`) } ><FontAwesomeIcon icon={faTrash} /> Delete</Button>
+                <Button variant="outline-danger" onClick={() => this.deleteData(process.env.REACT_APP_BASE_URL+`api/v1/engineers/${this.state.id}`) } ><FontAwesomeIcon icon={faTrash} /> Delete</Button>
                 </ButtonToolbar></Col>
                 </Row>
                 { (this.state.isDeleted) ? <Redirect to='/' /> : null }

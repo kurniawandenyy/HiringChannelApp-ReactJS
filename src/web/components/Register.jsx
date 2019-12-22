@@ -22,7 +22,7 @@ export default class Register extends Component {
             password: this.state.password,
             role: this.state.role
         }
-        axios.post('http://34.229.234.20:8000/auth/register', data)
+        axios.post(process.env.REACT_APP_BASE_URL+'auth/register', data)
         .then( res=>{
             this.setState({
                 message: res.data.message
@@ -90,9 +90,6 @@ export default class Register extends Component {
                 </Card.Body></Card>
                 <small>&copy;DenyKurniawan</small>
                 </Col></Row>
-                {/* {
-                    (this.state.message==='Register success') ? <Redirect push to="/login" /> : null
-                } */}
         </Container>
         )
     }

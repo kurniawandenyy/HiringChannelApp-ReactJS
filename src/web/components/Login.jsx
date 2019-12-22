@@ -20,7 +20,7 @@ class Login extends Component {
             email: this.state.email,
             password: this.state.password
         }
-        axios.post('http://34.229.234.20:8000/auth/login', dataLogin)
+        axios.post(process.env.REACT_APP_BASE_URL+'auth/login', dataLogin)
         .then( res=>{
             this.setState({
                 email: res.data.data.email,
